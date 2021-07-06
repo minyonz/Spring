@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.kh.exam01.consult">
+
+	<select id="listConsult" resultType="ConsultVo">
+		select * from tbl_consult
+		where sno = #{sno}
+		order by c_no desc
+	</select>
+
+</mapper>
