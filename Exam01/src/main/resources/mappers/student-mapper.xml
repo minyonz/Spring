@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.kh.exam01.student">
+	
+	<!-- 학생등록 -->
+	<insert id="insertStudent">
+		insert into tbl_student(sno, sname, syear, gender, major, score)
+		values(#{sno}, #{sname}, #{syear}, #{gender}, #{major}, #{score})
+	</insert>
+
+	<!-- 학생수정 -->
+	<update id="updateStudent">
+		update tbl_student set
+			sname = #{sname},
+			syear = #{syear},
+			gender = #{gender},
+			major = #{major},
+			score = #{score}
+		where sno = #{sno}
+	</update>
+	
+	<!-- 학생삭제 -->
+	<delete id="deleteStudent">
+		delete from tbl_student
+		where sno = #{sno}
+	</delete>
+	
+	<!-- 학생목록 -->
+	<select id="listStudent" resultType="StudentVo"> 
+		select * from tbl_student
+		order by sno
+	</select>
+	
+	<!-- 학생한명 -->
+	<select id="selectStudent" resultType="StudentVo">
+		select * from tbl_student
+		where sno = #{sno}
+	</select>
+	
+	<!-- 중복체크 -->
+	<select id="checkStudent" resultType="int">
+		select count(*) from tbl_student
+		where sno = #{sno}
+	</select>
+
+</mapper>
