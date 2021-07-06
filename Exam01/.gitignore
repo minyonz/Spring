@@ -1,6 +1,15 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/java,maven,eclipse,java-web
-# Edit at https://www.toptal.com/developers/gitignore?templates=java,maven,eclipse,java-web
+# Created by https://www.toptal.com/developers/gitignore/api/eclipse,java
+# Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,java
+
+mybatis-config.xml
+log4j.xml
+
+lecture
+target
+pom.properties
+.classpath
+MANIFEST.MF
 
 ### Eclipse ###
 .metadata
@@ -67,6 +76,12 @@ local.properties
 ### Eclipse Patch ###
 # Spring Boot Tooling
 .sts4-cache/
+
+# Eclipse Core
+.project
+
+# IDT-specific (Eclipse Java Development Tools)
+.classpath
 
 ### Java ###
 # Compiled class file
