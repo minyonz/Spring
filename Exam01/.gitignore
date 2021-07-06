@@ -2,6 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse,java
 
+root-context.xml
 mybatis-config.xml
 log4j.xml
 
