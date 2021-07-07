@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 쿼리에 대해 공통으로 붙을 이름 -->  
+<mapper namespace="com.kh.sample01.board">
+
+	<!-- nextval값 얻기 -->
+	<select id="getNextVal" resultType="int">
+		select seq_board_bno.nextval
+		from dual
+	</select>
+
+	<!-- nextval값을 얻어서 set해서b_no로 넘겨줌 -->
+	<!-- 글쓰기 -->
+	<insert id="insertArticle">
+		insert into tbl_board(b_no, b_title, b_content, user_id, re_group)
+		values (#{b_no}, #{b_title}, #{b_content, jdbcType=VARCHAR}, 
+				#{user_id}, #{b_no})
+	</insert>
+	
+	<!-- 첨부파일 추가 -->
+	<insert id="insertAttach">
+		insert into tbl_attach (file_name, b_no)
+		values (#{file_name}, #{b_no})
+	</insert>
+	
+	
+	<!-- 글조회 -->
+	<select id="selectByBno" resultType="BoardVo">
+		select * from tbl_board
+		where b_no = #{b_no}
+	</select>
+	
+	<!-- 글수정 -->
+	<update id="updateArticle">
+		update tbl_board set
+			b_title = #{b_title},
+			b_content = #{b_content, jdbcType=VARCHAR}
+		where b_no = #{b_no}
+	</update>
+	
+	<!-- 글삭제 -->
+	<delete id="deleteArticle">
+		delete from tbl_board
+		where b_no = #{b_no}
+	</delete>
+	
+	<!-- 글목록 -->
+	<!-- '%'제목3'%' 이렇게만 연결하면 제목3이 문자열이 아니게 되어 버리니까 || 로 연결해줌-->
+	<select id="listAll" resultType="BoardVo">
+		select * from 
+			(select rownum rnum, a.* from
+				(select * from tbl_board
+				<include refid="search"></include>
+				order by re_group desc, re_seq asc)a)
+			where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 글갯수(pagingDto) -->
+	<select id="getCount" resultType="int">
+		select count(*) from tbl_board
+		<include refid="search"></include>
+	</select>
+	
+	<!-- 구문을 하나 만들음 , <include refid="search"/>로 찾아서 넣기 가능-->
+	<sql id="search">
+		<if test="searchType != null">
+			<choose>
+				<when test='searchType == "t"'>
+					where b_title like '%' || #{keyword} || '%'
+				</when>
+				<when test='searchType == "c"'>
+					where b_content like '%' || #{keyword} || '%'
+				</when>
+				<when test='searchType == "u"'>
+					where user_id like '%' || #{keyword} || '%'
+				</when>
+				<when test='searchType == "tc"'>
+					where b_title like '%' || #{keyword} || '%'
+					or b_content like '%' || #{keyword} || '%'
+				</when>
+				<when test='searchType == "tcu"'>
+					where b_title like '%' || #{keyword} || '%'
+					or b_content like '%' || #{keyword} || '%'
+					or user_id like '%' || #{keyword} || '%'
+				</when>
+			</choose>
+		</if>
+	</sql>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateViewCnt">
+		update tbl_board set
+			b_viewcnt = b_viewcnt + 1
+		where b_no = #{b_no}
+	</update>
+	
+	<!-- 해당 게시글의 댓글 갯수 변경 -->
+	<update id="updateCommentCnt">
+		update tbl_board set
+			comment_cnt = comment_cnt + #{count}
+		where b_no = #{b_no}
+	</update>
+	
+	<!-- 좋아요 증가 -->
+	<update id="updateLikeCnt">
+		update tbl_board set
+			like_count = like_count + #{count}
+		where b_no = #{b_no}
+	</update>
+
+	<!-- 좋아요테이블 회원 -->
+	<insert id="insertLike">
+		insert into tbl_like (b_no, user_id)
+		values (#{b_no}, #{user_id})
+	</insert>
+	
+	<!-- 좋아요테이블 취소회원 -->
+	<delete id="deleteLike">
+		delete from tbl_like
+		where b_no = #{b_no} and user_id = #{user_id}
+	</delete>
+	
+	<!-- 좋아요 여부 -->
+	<select id="likeCheck" resultType="int">
+		select count(*) from tbl_like
+		where b_no = #{b_no} and user_id = #{user_id}
+	</select>
+	
+	<!-- 좋아요 전체 갯수 -->
+	<select id="likeAll" resultType="int">
+		select like_count from tbl_board
+		where b_no = #{b_no}
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+

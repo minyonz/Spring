@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.sample01.message">
+	
+	<!-- 메세지 보내기 -->
+	<insert id="insertMessage">
+		insert into tbl_message(msg_no, msg_content, msg_sender, msg_receiver)
+		values (seq_message_no.nextval, #{msg_content}, #{msg_sender}, #{msg_receiver})
+	</insert>
+	
+	<!-- 읽지않은 메세지 갯수 -->
+	<select id="notReadCount" resultType="int">
+		select count(*) from tbl_message
+		where msg_receiver = #{msg_receiver}
+		and msg_opendate is null
+	</select>
+	
+	<!-- 읽지 않은 메세지 -->
+	<select id="messageListNotRead" resultType="MessageVo">
+		select * from tbl_message
+		where msg_receiver = #{msg_receiver}
+		and msg_opendate is null
+		order by msg_no desc
+	</select>
+	
+	<!-- 메세지 받은 목록 -->
+	<select id="messageListReceive" resultType="MessageVo">
+		select * from tbl_message
+		where msg_receiver = #{mes_receiver}
+		order by msg_no desc
+	</select>
+	
+	<!-- 쪽지 읽은 날짜 업데이트 -->
+	<update id="updateOpenDate">
+		update tbl_message set
+			msg_opendate = sysdate
+		where msg_no = #{msg_no}
+	</update>
+	
+	<!-- 쪽지내용 -->
+	<select id="readMessage" resultType="MessageVo">
+		select * from tbl_message
+		where msg_no = #{msg_no}
+	</select>
+	
+	<!-- 메세지 오픈날짜 구하기 -->
+	<select id="getOpenDate" resultType="java.sql.Timestamp">
+		select msg_opendate from tbl_message
+		where msg_no = #{msg_no}
+	</select>
+	
+	<!-- 메세지 삭제 -->
+	<delete id="deleteMessage">
+		delete from tbl_message
+		where msg_no = #{msg_no} and msg_receiver = #{user_id}
+	</delete>
+	
+</mapper>
+
+
+
+
+
+
+
