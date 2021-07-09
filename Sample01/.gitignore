@@ -6,9 +6,6 @@ root-context.xml
 mybatis-config.xml
 log4j.xml
 
-.css
-.scss
-
 lecture
 target
 pom.properties
